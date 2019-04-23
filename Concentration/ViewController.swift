@@ -17,8 +17,32 @@ class ViewController: UIViewController {
         
     }
     
-    var flipCount = 0 { didSet { flipCountLabel.text = "Flips: \(flipCount)" } }
-    @IBOutlet var flipCountLabel: UILabel!
+    private(set) var flipCount = 0 { didSet  {
+    
+       updateFlipCountLabel()
+        }}
+        private func updateFlipCountLabel() {
+            
+            
+            let attributes: [NSAttributedString.Key:Any] = [
+                
+                .strokeWidth : 5.0,
+                .strokeColor : #colorLiteral(red: 1, green: 0.6181919844, blue: 0.1973338485, alpha: 1)
+             ]
+            
+            let attributedString = NSAttributedString(string: "Flips: \(flipCount)" , attributes: attributes)
+flipCountLabel.attributedText = attributedString
+            
+        }
+        
+     
+    
+ 
+    @IBOutlet var flipCountLabel: UILabel! {
+        didSet{
+            updateFlipCountLabel()
+        }
+    }
     
     @IBOutlet var cardButtons: [UIButton]!
     
@@ -47,19 +71,20 @@ class ViewController: UIViewController {
         }
     }
     
-   private var emojiChoices = ["👻", "🎃", "🦷", "🍾", "🍩", "🥃", "🍖", "🍟"]
-    
-    private var emoji = [Int: String]()
+//   private var emojiChoices = ["👻", "🎃", "🦷", "🍾", "🍩", "🥃", "🍖", "🍟"]
+    private var emojiChoices = "👻🎃🦷🍾🍩🥃🍖🍟"
+    private var emoji = [Card: String]()
     
    private func emoji(for card: Card) -> String {
     
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            let x = 5.arc4random
-            let randomIndex =
-            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
+        if emoji[card] == nil, emojiChoices.count > 0 {
+           
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
+            
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
         }
         
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
 }
 
